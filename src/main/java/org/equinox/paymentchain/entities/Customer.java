@@ -19,6 +19,7 @@ public class Customer {
     private String phone;
     private String iban;
     private String address;
+    private String code;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CustomerProduct> products;
