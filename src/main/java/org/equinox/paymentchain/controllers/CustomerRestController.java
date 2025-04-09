@@ -6,6 +6,7 @@ import io.netty.channel.epoll.EpollChannelOption;
 import io.netty.handler.timeout.ReadTimeoutHandler;
 import io.netty.handler.timeout.WriteTimeoutHandler;
 import org.equinox.paymentchain.entities.Customer;
+import org.equinox.paymentchain.entities.CustomerProduct;
 import org.equinox.paymentchain.repository.ICustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
@@ -91,16 +92,23 @@ public class CustomerRestController {
     }
 
     @GetMapping("/full")
-    public Customer findCustomerById(@RequestPart String code) {
-        return customerRepository.findByCode(code);
+    public Customer findCustomerById(@RequestParam("code") String code) {
+        Customer customer = customerRepository.findByCode(code);
+
+        List<CustomerProduct> products = customer.getProducts();
+        products.forEach(product -> {
+            String productName = getProductName(product.getProductId());
+            product.setProductName(productName);
+        });
+        return customer;
     }
 
     public String getProductName(Long id) {
         WebClient build = clientBuilder
                 .clientConnector(new ReactorClientHttpConnector(client))
-                .baseUrl("http://localhost:8080/product")
+                .baseUrl("http://localhost:8081/product")
                 .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                .defaultUriVariables(Collections.singletonMap("url", "http://localhost:8080/product"))
+                .defaultUriVariables(Collections.singletonMap("url", "http://localhost:8081/product"))
                 .build();
 
         JsonNode block = build.method(HttpMethod.GET).uri("/" + id).retrieve().bodyToMono(JsonNode.class).block();

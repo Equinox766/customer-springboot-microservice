@@ -1,5 +1,6 @@
 package org.equinox.paymentchain.entities;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -11,6 +12,7 @@ import java.util.List;
 public class Customer {
 
     @Id
+    @Schema(hidden = true)
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String name;
