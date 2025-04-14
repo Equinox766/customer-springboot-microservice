@@ -100,6 +100,10 @@ public class CustomerRestController {
             String productName = getProductName(product.getProductId());
             product.setProductName(productName);
         });
+
+        List<?> transactions = getTransaction(customer.getIban());
+        customer.setTransactions(transactions);
+
         return customer;
     }
 
@@ -114,5 +118,19 @@ public class CustomerRestController {
         JsonNode block = build.method(HttpMethod.GET).uri("/" + id).retrieve().bodyToMono(JsonNode.class).block();
         String name = block.get("name").asText();
         return name;
+    }
+
+    public List<?> getTransaction(String iban) {
+        WebClient build = clientBuilder
+                .clientConnector(new ReactorClientHttpConnector(client))
+                .baseUrl("http://localhost:8082/transactions")
+                .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .build();
+
+        return build.method(HttpMethod.GET).uri(uriBuilder -> uriBuilder
+                .path("/account/" + iban)
+                .queryParam("iban", iban)
+                .build())
+                .retrieve().bodyToFlux(Object.class).collectList().block();
     }
 }
