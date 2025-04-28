@@ -14,19 +14,25 @@
     <version>0.0.1-SNAPSHOT</version>
     <name>paymentchain</name>
     <description>paymentchain</description>
-<!--    <url/>
-    <licenses>
-        <license/>
-    </licenses>
-    <developers>
-        <developer/>
-    </developers>
-    <scm>
-        <connection/>
-        <developerConnection/>
-        <tag/>
-        <url/>
-    </scm>-->
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+    </dependencies>
+    <!--    <url/>
+        <licenses>
+            <license/>
+        </licenses>
+        <developers>
+            <developer/>
+        </developers>
+        <scm>
+            <connection/>
+            <developerConnection/>
+            <tag/>
+            <url/>
+        </scm>-->
 
     <build>
         <plugins>

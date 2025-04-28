@@ -9,6 +9,7 @@ import org.equinox.paymentchain.entities.Customer;
 import org.equinox.paymentchain.entities.CustomerProduct;
 import org.equinox.paymentchain.repository.ICustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.http.*;
 import org.springframework.http.client.reactive.ReactorClientHttpConnector;
 import org.springframework.web.bind.annotation.*;
@@ -28,6 +29,9 @@ public class CustomerRestController {
 
     @Autowired
     ICustomerRepository customerRepository;
+
+    @Autowired
+    private Environment env;
 
     private final WebClient.Builder clientBuilder;
 
@@ -132,5 +136,10 @@ public class CustomerRestController {
                 .queryParam("iban", iban)
                 .build())
                 .retrieve().bodyToFlux(Object.class).collectList().block();
+    }
+
+    @GetMapping("/check")
+    public String check() {
+        return "Hello your property value is:  {}"+ env.getProperty("custom.activeProfileName");
     }
 }
